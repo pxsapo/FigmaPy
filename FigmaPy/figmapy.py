@@ -90,7 +90,7 @@ class FigmaPy:
     """
     Get the JSON file contents for a file.
     """
-        def get_file(self, file_key, version=None):
+    def get_file(self, file_key, version=None):
         optional_data = ''
         if version is not None:
             optional_data += '?&version={0}'.format(str(version))
