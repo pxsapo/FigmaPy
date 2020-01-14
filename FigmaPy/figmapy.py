@@ -90,21 +90,26 @@ class FigmaPy:
     """
     Get the JSON file contents for a file.
     """
-    def get_file(self, file_key, geometry=None, version=None):
+        def get_file(self, file_key, version=None):
         optional_data = ''
-        if geometry is not None or version is not None:
-            optional_data = '?'
-            if geometry is not None:
-                optional_data += str(geometry)
-                if version is not None:
-                    optional_data += '&{0}'.format(str(version))
-            elif version is not None:
-                optional_data += str(version)
+        if version is not None:
+            optional_data += '?&version={0}'.format(str(version))
+        elif version is not None:
+            optional_data += str(version)
 
-        data = self.api_request('files/{0}{1}'.format(file_key, optional_data), method='get')
+        data = self.api_request('files/{0}{1}'.format(file_key, optional_data),
+                                method='get')
+
         if data is not None:
-            return File(data['name'], data['document'], data['components'], data['lastModified'], data['thumbnailUrl'],
-                        data['schemaVersion'], data['styles'])
+            if "document" in data:
+
+                # Sometimes the Figma will not return lastModified, thumbnailUrl etc..  This is a workaround
+                return File(data['name'], data['document'], None, None, None,
+                            None, None)
+            else:
+                return File(data['name'], data['document'], data['components'],
+                            data['lastModified'], data['thumbnailUrl'],
+                            data['schemaVersion'], data['styles'])
 
     """
     Get the version history of a file.
