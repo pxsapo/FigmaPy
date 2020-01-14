@@ -147,22 +147,11 @@ class FigmaPy:
     """
     Get urls for server-side rendered images from a file.
     """
-    def get_file_images(self, file_key, ids, scale=None, format=None, version=None):
-        optional_data = ''
-        if scale is not None or format is not None or version is not None:
-            if scale is not None:
-                optional_data += '&{0}'.format(str(scale))
-            if format is not None:
-                optional_data += '&{0}'.format(str(format))
-            if version is not None:
-                optional_data += '&{0}'.format(str(version))
-        id_array = []
-        for id in ids:
-            id_array.append(id)
-        id_list = ','.join(id_array)
-        data = self.api_request('images/{0}?ids={1}{2}'.format(file_key, id_list, optional_data), method='get')
+    def get_file_images(self, file_key):
+        data = self.api_request('files/{0}/images'.format(file_key),
+                                method='get')
         if data is not None:
-            return FileImages(data['images'], data['err'])
+            return FileImages(data['meta']['images'], data['error'])
 
     # -------------------------------------------------------------------------
     # SCOPE: TEAMS
